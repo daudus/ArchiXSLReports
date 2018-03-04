@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:archimate="http://www.archimatetool.com/archimate">
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
+							  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+							  xmlns:archimate="http://www.archimatetool.com/archimate"
+							  xmlns:date="http://exslt.org/dates-and-times">
 	<xsl:output indent="yes"  method="html" encoding="utf-8"/>
 	
 	<xsl:template match="/">
@@ -8,11 +11,12 @@
 		    <title>Application portfolio report: <xsl:value-of select="archimate:model/@name"/></title>
 		  </head>
 		  <body>
-		    <h1>Application portfolio report: <xsl:value-of select="archimate:model/@name"/></h1>
-		    
+		    <h1>Application portfolio report: <xsl:value-of select="archimate:model/@name"/>.</h1>
+		    <h2>Timestamp: <xsl:value-of select="date:date-time()"/></h2>
 		    <table width="100%" border="1">
 		    	<thead>
 		    		<tr>
+		    			<th>Order</th>
 		    			<th>Application Name</th>
 		    			<th>Descripiton</th>
 		    			<th>Delivery Type</th>
@@ -30,7 +34,13 @@
 	<xsl:template match="child[@xsi:type='archimate:DiagramObject']">
 		<xsl:variable name="idElement" select="@archimateElement"/>
 		<xsl:variable name="element" select="//folder[@name='Application']//element[@xsi:type='archimate:ApplicationComponent'][@id=$idElement]"/>
+		<xsl:variable name="orderElement">
+			<xsl:number value="position()" format="1"/>
+		</xsl:variable>
 		<tr>
+			<td>
+				<xsl:value-of select="format-number($orderElement, '###')"/>
+			</td>
 			<td>
 				<xsl:value-of select="$element/@name"/>
 			</td>
