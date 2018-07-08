@@ -5,7 +5,11 @@
 							  xmlns:date="http://exslt.org/dates-and-times">
 	<xsl:output indent="yes"  method="html" encoding="utf-8"/>
 	
+	<xsl:variable name="DIAGRAM">TEMP</xsl:variable>
+	<xsl:variable name="INNERELEMENTS">yes</xsl:variable>
+	
 	<xsl:template match="/">
+
 		<html>
 		  <head>
 		    <title>Application portfolio report: <xsl:value-of select="archimate:model/@name"/></title>
@@ -20,10 +24,12 @@
 		    			<th>Application Name</th>
 		    			<th>Descripiton</th>
 		    			<th>Delivery Type</th>
+		    			<th>Criticality</th>
+		    			<th>System Type</th>
 		    		</tr>
 		    	</thead>
 		    	<tbody>
-					<xsl:apply-templates select="//element[@name='30001*AA:Application Landscape']/child[@xsi:type='archimate:DiagramObject']">
+					<xsl:apply-templates select="//element[@name=$DIAGRAM]/child[@xsi:type='archimate:DiagramObject']">
 					</xsl:apply-templates>
 				</tbody>	
 		    </table>
@@ -50,7 +56,17 @@
 			<td>
 				<xsl:apply-templates select="$element/property[@key='EA_DeliveryType']"/>
 			</td>
+			<td>
+				<xsl:apply-templates select="$element/property[@key='EA_BusinessCriticality']"/>
+			</td>
+			<td>
+				<xsl:apply-templates select="$element/property[@key='EA_SystemType']"/>
+			</td>
 		</tr>
+		<xsl:if test="$INNERELEMENTS = 'yes'">
+			<xsl:apply-templates select="child[@xsi:type='archimate:DiagramObject']">
+						</xsl:apply-templates>
+		</xsl:if>
 	</xsl:template>
 	
 	<xsl:template match="property">
